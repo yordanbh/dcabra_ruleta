@@ -9,9 +9,6 @@ import gsap from "gsap";
 import theme from "../config/theme";
 import raffleConfig from "../config/raffleConfig";
 
-/**
- * Reduce nombres demasiado largos.
- */
 function fitName(name, maxLength) {
   if (!name) return "";
 
@@ -20,10 +17,6 @@ function fitName(name, maxLength) {
     : name;
 }
 
-/**
- * Mezcla un color hexadecimal con otro.
- * Se utiliza para crear degradados suaves.
- */
 function mixColors(colorA, colorB, amount) {
   const parseColor = (color) => {
     const cleanColor = color.replace("#", "");
@@ -60,9 +53,6 @@ export default function Roulette({
   const [canvasSize, setCanvasSize] = useState(400);
   const [logoError, setLogoError] = useState(false);
 
-  /**
-   * Tamaño responsive.
-   */
   useEffect(() => {
     const updateSize = () => {
       const availableWidth = window.innerWidth - 40;
@@ -94,9 +84,6 @@ export default function Roulette({
     };
   }, [isSpinning]);
 
-  /**
-   * Dibuja la ruleta completa.
-   */
   const drawWheel = useCallback(
     (angle) => {
       const canvas = canvasRef.current;
@@ -110,9 +97,6 @@ export default function Roulette({
       const radius = center - 15;
       const total = participants.length;
 
-      /*
-       * Ajuste para pantallas Retina.
-       */
       if (
         canvas.width !== canvasSize * dpr ||
         canvas.height !== canvasSize * dpr
@@ -140,9 +124,6 @@ export default function Roulette({
         canvasSize,
       );
 
-      /**
-       * Estado vacío.
-       */
       if (!total) {
         // Sombra exterior
         context.beginPath();
@@ -169,7 +150,7 @@ export default function Roulette({
         context.lineWidth = 3;
         context.stroke();
 
-        // Texto
+        // Texto cuando no hay participantes
         context.fillStyle = theme.muted;
         context.font =
           "600 13px Inter, system-ui, sans-serif";
@@ -177,10 +158,13 @@ export default function Roulette({
         context.textAlign = "center";
         context.textBaseline = "middle";
 
+        // Radio del hub central (mismo cálculo que usas más abajo)
+        const hubRadius = canvasSize <= 280 ? 26 : 31;
+
         context.fillText(
           "Sin participantes",
           center,
-          center,
+          center + hubRadius + 20,
         );
 
         return;
@@ -189,9 +173,6 @@ export default function Roulette({
       const segmentAngle =
         (Math.PI * 2) / total;
 
-      /**
-       * Sombra exterior.
-       */
       context.save();
 
       context.beginPath();
@@ -211,9 +192,6 @@ export default function Roulette({
 
       context.restore();
 
-      /**
-       * Segmentos.
-       */
       context.save();
 
       context.translate(center, center);
@@ -233,9 +211,6 @@ export default function Roulette({
           index % theme.wheelColors.length
           ];
 
-        /*
-         * Degradado radial para cada segmento.
-         */
         const segmentGradient =
           context.createRadialGradient(
             0,
@@ -276,18 +251,12 @@ export default function Roulette({
         context.fillStyle = segmentGradient;
         context.fill();
 
-        /*
-         * Separador entre segmentos.
-         */
         context.strokeStyle =
           "rgba(255,255,255,0.40)";
 
         context.lineWidth = 1.4;
         context.stroke();
 
-        /*
-         * Nombre del participante.
-         */
         context.save();
 
         context.rotate(middle);
@@ -326,9 +295,6 @@ export default function Roulette({
 
       context.restore();
 
-      /**
-       * Sombreado interior.
-       */
       context.save();
 
       context.beginPath();
@@ -379,9 +345,6 @@ export default function Roulette({
 
       context.restore();
 
-      /**
-       * Aro exterior blanco.
-       */
       context.beginPath();
 
       context.arc(
@@ -396,9 +359,6 @@ export default function Roulette({
       context.lineWidth = 7;
       context.stroke();
 
-      /**
-       * Aro exterior de la marca.
-       */
       context.beginPath();
 
       context.arc(
@@ -413,9 +373,6 @@ export default function Roulette({
       context.lineWidth = 3;
       context.stroke();
 
-      /**
-       * Centro de la ruleta.
-       */
       const hubRadius =
         canvasSize <= 280 ? 26 : 31;
 
@@ -449,16 +406,10 @@ export default function Roulette({
     [participants, canvasSize],
   );
 
-  /**
-   * Redibujar si cambia la lista o tamaño.
-   */
   useLayoutEffect(() => {
     drawWheel(currentAngleRef.current);
   }, [drawWheel]);
 
-  /**
-   * Animación del giro.
-   */
   useEffect(() => {
     if (
       !isSpinning ||
@@ -510,10 +461,6 @@ export default function Roulette({
       },
 
       onComplete: () => {
-        /*
-         * Evita que el ángulo crezca indefinidamente
-         * después de muchos sorteos.
-         */
         currentAngleRef.current =
           ((finalAngle % 360) + 360) % 360;
 
@@ -623,7 +570,7 @@ export default function Roulette({
       >
         {!logoError ? (
           <img
-            src={raffleConfig.logo}
+            src={raffleConfig.favicon}
             alt=""
             className="h-full w-full object-cover p-1"
             onError={() =>

@@ -102,6 +102,7 @@ export default function App() {
               onLoadDemo={draw.loadDemoData}
               disabled={draw.isSpinning}
             />
+
             {!!draw.participants.length && (
               <div className="flex justify-center">
                 <button

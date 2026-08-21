@@ -407,13 +407,13 @@ export default function WelcomeExperience({ onComplete, onSkip }) {
               src={raffleConfig.logo}
               alt="D'Cabra"
               draggable="false"
-              className="relative h-20 w-20 rounded-[1.4rem] border border-white/20 object-cover shadow-2xl sm:h-24 sm:w-24"
+              className="relative rounded-[1.4rem] border border-white/20 object-cover shadow-2xl bg-white p-1.5 h-50"
             />
           </div>
 
           <div
             data-welcome-static
-            className="mt-6 inline-flex items-center gap-2 rounded-full border border-dcabra-gold/20 bg-dcabra-gold/10 px-3 py-1.5"
+            className="mt-6 inline-flex items-center gap-2 rounded-full border border-dcabra-gold/50 bg-dcabra-gold/10 px-3 py-1.5"
           >
             <Sparkles size={13} className="text-dcabra-gold" />
 
@@ -440,7 +440,7 @@ export default function WelcomeExperience({ onComplete, onSkip }) {
 
           <p
             data-welcome-copy
-            className="mt-5 max-w-xl text-sm leading-relaxed text-white/65 opacity-0 sm:text-base"
+            className="mt-5 max-w-xl text-sm leading-relaxed text-white opacity-0 sm:text-base"
           >
             Hoy la suerte elegirá a uno de nuestros participantes.
             Todo está preparado para vivir un momento especial.
@@ -484,7 +484,7 @@ export default function WelcomeExperience({ onComplete, onSkip }) {
               data-opportunity-item
               className="rounded-2xl border border-white/10 bg-white/[0.07] px-5 py-4 backdrop-blur-md"
             >
-              <p className="text-xs font-bold uppercase tracking-widest text-white/50">
+              <p className="text-xs font-bold uppercase tracking-widest text-white">
                 Selección
               </p>
 
@@ -497,7 +497,7 @@ export default function WelcomeExperience({ onComplete, onSkip }) {
               data-opportunity-item
               className="rounded-2xl border border-white/10 bg-white/[0.07] px-5 py-4 backdrop-blur-md"
             >
-              <p className="text-xs font-bold uppercase tracking-widest text-white/50">
+              <p className="text-xs font-bold uppercase tracking-widest text-white">
                 Resultado
               </p>
 
@@ -542,7 +542,7 @@ export default function WelcomeExperience({ onComplete, onSkip }) {
                   {number}
                 </span>
 
-                <p className="text-xs font-semibold leading-snug text-white/80">
+                <p className="text-xs font-semibold leading-snug text-white">
                   {text}
                 </p>
               </div>
@@ -582,7 +582,7 @@ export default function WelcomeExperience({ onComplete, onSkip }) {
           </h2>
 
           {raffleConfig.prizeDescription && (
-            <p className="mt-3 max-w-lg text-sm text-white/65 sm:text-base">
+            <p className="mt-3 max-w-lg text-sm text-white sm:text-base">
               {raffleConfig.prizeDescription}
             </p>
           )}
@@ -621,7 +621,7 @@ export default function WelcomeExperience({ onComplete, onSkip }) {
           data-scroll-hint
           className="pointer-events-none absolute bottom-5 left-1/2 z-20 flex -translate-x-1/2 flex-col items-center gap-2 sm:bottom-7"
         >
-          <span className="text-[9px] font-bold uppercase tracking-[0.25em] text-white/45">
+          <span className="text-[9px] font-bold uppercase tracking-[0.25em] text-white">
             Desliza para descubrir
           </span>
 
