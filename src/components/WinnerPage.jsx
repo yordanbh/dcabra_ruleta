@@ -2,7 +2,13 @@ import { useEffect, useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import confetti from "canvas-confetti";
-import { ArrowLeft, Gift, RotateCcw, Sparkles, Trophy } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Gift,
+  Sparkles,
+  Trophy,
+} from "lucide-react";
 import raffleConfig from "../config/raffleConfig";
 
 function launchConfetti() {
@@ -14,7 +20,7 @@ function launchConfetti() {
   }, 280);
 }
 
-export default function WinnerPage({ winner, onBack, onReset }) {
+export default function WinnerPage({ winner, onBack }) {
   const rootRef = useRef(null);
 
   useEffect(() => {
@@ -38,7 +44,7 @@ export default function WinnerPage({ winner, onBack, onReset }) {
   if (!winner) return null;
 
   return (
-    <main ref={rootRef} className="winner-page relative min-h-screen overflow-hidden bg-dcabra-primary px-4 py-6 text-white">
+    <main ref={rootRef} className="winner-page relative min-h-screen overflow-hidden bg-dcabra-primary py-3 text-white">
       <div className="absolute inset-0 welcome-mesh opacity-70" />
       <div className="absolute -left-32 top-1/4 h-96 w-96 rounded-full bg-white/5 blur-3xl" />
       <div className="absolute -right-32 bottom-0 h-96 w-96 rounded-full bg-dcabra-gold/20 blur-3xl" />
@@ -77,8 +83,13 @@ export default function WinnerPage({ winner, onBack, onReset }) {
             <button type="button" onClick={launchConfetti} className="inline-flex items-center gap-2 rounded-xl bg-dcabra-primary px-5 py-3 text-sm font-bold text-white shadow-lg hover:bg-dcabra-primaryDark">
               <Sparkles size={17} /> Celebrar otra vez
             </button>
-            <button type="button" onClick={onReset} className="inline-flex items-center gap-2 rounded-xl border border-dcabra-border px-5 py-3 text-sm font-bold text-dcabra-muted hover:bg-dcabra-primaryFaded hover:text-dcabra-primary">
-              <RotateCcw size={17} /> Nueva dinámica
+            <button
+              type="button"
+              onClick={onBack}
+              className="inline-flex items-center gap-2 rounded-xl border border-dcabra-border px-5 py-3 text-sm font-bold text-dcabra-muted transition hover:bg-dcabra-primaryFaded hover:text-dcabra-primary"
+            >
+              Continuar sorteo
+              <ArrowRight size={17} />
             </button>
           </div>
         </section>

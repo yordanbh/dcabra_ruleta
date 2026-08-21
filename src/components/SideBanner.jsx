@@ -1,6 +1,6 @@
 export default function SideBanner({ src, alt, side }) {
   return (
-    <aside className="hidden w-full max-w-[220px] flex-col items-center justify-start pt-8 xl:flex 2xl:max-w-[260px]">
+    <aside className="hidden w-full max-w-[200px] flex-col items-center justify-start pt-8 xl:flex 2xl:max-w-[470px]">
       <div className="sticky top-8 w-full overflow-hidden rounded-2xl border border-dcabra-border bg-white shadow-sm">
         <img
           src={src}

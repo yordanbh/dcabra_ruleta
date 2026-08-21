@@ -16,7 +16,7 @@ export default function ConfirmResetModal({ onReset }) {
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="inline-flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-medium text-dcabra-muted transition hover:bg-dcabra-primary/5 hover:text-dcabra-primary"
+        className="inline-flex items-center gap-1.5 rounded-xl bg-dcabra-primary px-3 py-2 text-xs font-semibold text-white transition-all duration-300 hover:bg-dcabra-primary/10 hover:text-dcabra-primary"
       >
         <RotateCcw size={14} /> Reiniciar dinámica
       </button>

@@ -11,6 +11,8 @@ import {
   saveWinners,
 } from "../utils/storage";
 
+import { sileo } from "sileo";
+
 const MAX_VISIBLE = 10;
 
 function shuffledCopy(items) {
@@ -40,13 +42,10 @@ export default function useDraw({ onDrawComplete }) {
   const [isSpinning, setIsSpinning] = useState(false);
   const [currentWinner, setCurrentWinner] = useState(null);
   const [targetAngle, setTargetAngle] = useState(0);
-  const [toast, setToast] = useState(null);
   const spinningRef = useRef(false);
-  const toastTimerRef = useRef(null);
   const drawTimerRef = useRef(null);
 
   useEffect(() => () => {
-    window.clearTimeout(toastTimerRef.current);
     window.clearTimeout(drawTimerRef.current);
   }, []);
 
@@ -57,37 +56,92 @@ export default function useDraw({ onDrawComplete }) {
 
   useEffect(() => saveWinners(winners), [winners]);
 
-  const showToast = useCallback((message, type = "info") => {
-    window.clearTimeout(toastTimerRef.current);
-    setToast({ message, type });
-    toastTimerRef.current = window.setTimeout(() => setToast(null), 4000);
-  }, []);
+  const showToast = useCallback(
+    (message, type = "info") => {
+      const options = {
+        title: message,
+        duration: 4000,
+      };
 
-  const loadParticipantsFromFile = useCallback((file) => {
-    if (!file) return;
-    const extension = file.name.split(".").pop()?.toLowerCase();
-    if (!extension || !["txt", "csv"].includes(extension)) {
-      showToast("Formato no soportado. Usa .txt o .csv", "error");
-      return;
-    }
+      switch (type) {
+        case "success":
+          sileo.success(options);
+          break;
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const parsed = parseParticipantFile(event.target.result, extension);
-      if (parsed.error) {
-        showToast(parsed.error, "error");
-        return;
+        case "error":
+          sileo.error(options);
+          break;
+
+        case "warning":
+          sileo.warning(options);
+          break;
+
+        default:
+          sileo.info(options);
+          break;
       }
-      setParticipants((current) => {
-        const { merged, added } = mergeParticipants(current, parsed.participants);
-        const duplicateText = parsed.duplicatesRemoved ? ` · ${parsed.duplicatesRemoved} duplicados omitidos` : "";
-        showToast(`${added} participantes cargados${duplicateText}`, "success");
-        return merged;
-      });
-    };
-    reader.onerror = () => showToast("No se pudo leer el archivo.", "error");
-    reader.readAsText(file);
-  }, [showToast]);
+    },
+    [],
+  );
+
+  const loadParticipantsFromFile = useCallback(
+    async (file) => {
+      try {
+        const {
+          participants: parsedParticipants,
+          duplicatesRemoved,
+          error,
+        } = await parseParticipantFile(file);
+
+        if (error) {
+          showToast(error, "error");
+          return false;
+        }
+
+        const {
+          merged,
+          added,
+        } = mergeParticipants(
+          participants,
+          parsedParticipants,
+        );
+
+        setParticipants(merged);
+
+        let message =
+          `${added} participante${added !== 1 ? "s" : ""} ` +
+          `cargado${added !== 1 ? "s" : ""}`;
+
+        if (duplicatesRemoved > 0) {
+          message +=
+            ` · ${duplicatesRemoved} duplicado` +
+            `${duplicatesRemoved !== 1 ? "s" : ""} omitido` +
+            `${duplicatesRemoved !== 1 ? "s" : ""}`;
+        }
+
+        if (added === 0) {
+          message = "Todos los participantes ya estaban cargados.";
+        }
+
+        showToast(
+          message,
+          added > 0 ? "success" : "info",
+        );
+
+        return true;
+      } catch (error) {
+        console.error("Error procesando participantes:", error);
+
+        showToast(
+          "No se pudo procesar el archivo seleccionado.",
+          "error",
+        );
+
+        return false;
+      }
+    },
+    [participants, showToast],
+  );
 
   const loadDemoData = useCallback(() => {
     setParticipants((current) => {
@@ -156,7 +210,6 @@ export default function useDraw({ onDrawComplete }) {
     isSpinning,
     currentWinner,
     targetAngle,
-    toast,
     isFinished: participants.length === 0 && winners.length > 0,
     canSpin: participants.length > 0 && !isSpinning,
     maxVisible: MAX_VISIBLE,

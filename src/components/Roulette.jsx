@@ -15,13 +15,34 @@ export default function Roulette({ participants, isSpinning, targetAngle }) {
 
   useEffect(() => {
     const updateSize = () => {
-      const available = Math.min(window.innerWidth - 40, window.innerHeight - 220);
-      setCanvasSize(Math.max(260, Math.min(440, available)));
+      const availableWidth = window.innerWidth - 40;
+
+      const availableHeight = isSpinning
+        ? window.innerHeight - 190
+        : window.innerHeight - 330;
+
+      const maximumSize = isSpinning ? 460 : 400;
+
+      setCanvasSize(
+        Math.max(
+          240,
+          Math.min(
+            maximumSize,
+            availableWidth,
+            availableHeight,
+          ),
+        ),
+      );
     };
+
     updateSize();
+
     window.addEventListener("resize", updateSize);
-    return () => window.removeEventListener("resize", updateSize);
-  }, []);
+
+    return () => {
+      window.removeEventListener("resize", updateSize);
+    };
+  }, [isSpinning]);
 
   const drawWheel = (angle) => {
     const canvas = canvasRef.current;
